@@ -29,9 +29,6 @@ export const GET = async (request: NextRequest) => {
     const payload = jwt.verify(token, secret);
     studentId = (<Payload>payload).studentId;
     role = (<Payload>payload).role;
-
-    //read role information from "payload" here (just one line code!)
-    //role = ...
   } catch {
     return NextResponse.json(
       {
