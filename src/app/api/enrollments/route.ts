@@ -29,6 +29,9 @@ export const GET = async (request: NextRequest) => {
     const payload = jwt.verify(token, secret);
     studentId = (<Payload>payload).studentId;
     role = (<Payload>payload).role;
+
+    //read role information from "payload" here (just one line code!)
+    //role = ...
   } catch {
     return NextResponse.json(
       {
@@ -38,7 +41,7 @@ export const GET = async (request: NextRequest) => {
       { status: 401 }
     );
   }
-  
+  try {
     if(role === "ADMIN"){
       const courseNoList = [];
       for (const enroll of DB.enrollments) {
@@ -49,6 +52,12 @@ export const GET = async (request: NextRequest) => {
       courseNoList,
     });
     }
+  } catch {
+      return NextResponse.json({
+      ok: true,
+      enrollments: null //replace null with enrollment data!
+  });
+  }
   //Check role here. If user is "ADMIN" show all of the enrollments instead
   //   return NextResponse.json({
   //     ok: true,
@@ -224,7 +233,7 @@ export const DELETE = async (request: NextRequest) => {
   //   { status: 403 }
   // );
   if(role === "ADMIN" && studentId === null){
-    return NextResponse.json(
+      return NextResponse.json(
     {
       ok: true,
       message: "Only Student can access this API route",
